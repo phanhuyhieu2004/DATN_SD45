@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Đăng nhập</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/login.css">
+</head>
+
+<body>
+<section class="h-100">
+    <div class="container h-100">
+        <div class="row justify-content-center h-100">
+            <div class="col-12 col-sm-10 col-md-8 col-lg-6">
+                <div class="text-center my-5">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Gucci_Logo.svg/936px-Gucci_Logo.svg.png" alt="logo" width="400" style="margin-left: -100px;">
+                </div>
+                <div class="card shadow-lg">
+                    <div class="card-body p-5">
+                        <h1 class="fs-4 card-title fw-bold mb-4">Đăng nhập</h1>
+
+                        <form method="POST" class="needs-validation" autocomplete="off">
+                            <div class="mb-3">
+                                <label class="mb-2 text-muted" for="username">Địa chỉ E-Mail</label>
+                                <input id="username" type="username" class="form-control" name="username" placeholder="Nhập username của bạn" required>
+                                <div class="invalid-feedback">Username không hợp lệ</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="mb-2 text-muted" for="password">Mật khẩu</label>
+                                <input id="password" type="password" class="form-control" name="password" placeholder="Nhập mật khẩu" required>
+                                <div class="invalid-feedback">Mật khẩu là bắt buộc</div>
+                            </div>
+
+                            <div class="d-flex justify-content-center mb-3">
+                                <button type="button" class="btn btn-primary me-2" id="loginButton">Đăng nhập</button>
+                                <button type="button" class="btn btn-secondary" onclick="location.href='/v1/auth/register'">Đăng ký</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-footer py-3 border-0">
+                        <div class="text-center">Bạn chưa có tài khoản? <a href="/v1/auth/register" style="color: blue;">Đăng ký</a></div>
+                    </div>
+                </div>
+                <div class="text-center mt-5 text-light py-3">Copyright &copy; 2020-2024 &mdash; By Hoang Khong Team</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div id="message" class="text-center mb-3"></div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#loginButton').click(function() {
+            // Lấy đối tượng form
+            const form = $('form')[0];
+
+            // Kiểm tra tính hợp lệ của form
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const loginData = {
+                username: $('#username').val(),
+                password: $('#password').val()
+            };
+
+            $.ajax({
+                url: '/auth',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(loginData),
+                success: function(response) {
+                    $('#message').html('<div class="alert alert-success">Đăng nhập thành công!</div>');
+                    hideMessageAfterDelay();
+                    setTimeout(function() {
+                        window.location.href = '/';
+                    }, 1000);
+                },
+                error: function(jqXHR) {
+                    $('#message').html('<div class="alert alert-danger">Thông tin đăng nhập không chính xác!</div>');
+                    hideMessageAfterDelay();
+                }
+            });
+        });
+
+        function hideMessageAfterDelay() {
+            setTimeout(function() {
+                $('#message').fadeOut('slow', function() {
+                    $(this).empty().show();
+                });
+            }, 2222);
+        }
+    });
+</script>
+
+</body>
+</html>
